@@ -38,7 +38,7 @@ export class JenkinsService {
     console.log('[jenkins-service]: New artefact pipeline triggered.');
     return deployed;
   }
-
+  
   async deployService(deployment: DeploymentModel) : Promise<boolean> {
     const deployed: boolean = false;
 
@@ -55,6 +55,7 @@ export class JenkinsService {
             SERVICE: deployment.service,
             IMAGE: deployment.image,
             TAG: deployment.tag,
+            KEPTNCONTEXT: deployment.keptnContext,
             PREVBLUEVERSION: deployment.prevblueversion,
           },
         }, function(err) {
@@ -83,6 +84,7 @@ export class JenkinsService {
     return deployed;
   }
 
+
   async startTests(deployment: DeploymentModel) : Promise<boolean> {
     let started: boolean = false;
 
@@ -99,6 +101,7 @@ export class JenkinsService {
             SERVICE: deployment.service,
             IMAGE: deployment.image,
             TAG: deployment.tag,
+            KEPTNCONTEXT: deployment.keptnContext,
             PREVBLUEVERSION: deployment.prevblueversion,
           },
         }, function(err) {
@@ -129,6 +132,7 @@ export class JenkinsService {
           SERVICE: deployment.service,
           IMAGE: deployment.image,
           TAG: deployment.tag,
+          KEPTNCONTEXT: deployment.keptnContext,
           PREVBLUEVERSION: deployment.prevblueversion,
         },
       }, function(err) {
