@@ -1,28 +1,16 @@
 #!/bin/sh
 DEPLOYMENT=$1
-JENKINS_USER=$2
-JENKINS_PASSWORD=$3
-GITHUB_USER_EMAIL=$4
-GITHUB_ORGANIZATION=$5
-DT_TENANT_ID=$6
-DT_API_TOKEN=$7
-DT_TENANT_URL=$8
+GATEWAY=$2
+JENKINS_USER=$3
+JENKINS_PASSWORD=$4
+GITHUB_USER_EMAIL=$5
+GITHUB_ORGANIZATION=$6
+DT_TENANT_ID=$7
+DT_API_TOKEN=$8
+DT_TENANT_URL=$9
 
 # Deploy Jenkins - see keptn/install/setupInfrastructure.sh:
 rm -f config/jenkins/gen/k8s-jenkins-deployment.yml
-
-case $DEPLOYMENT in 
-  eks) 
-    # for AWS we query the IP of the load balancer 
-    GATEWAY=$(kubectl describe svc istio-ingressgateway -n istio-system | grep "LoadBalancer Ingress:" | sed 's~LoadBalancer Ingress:[ \t]*~~')
-    export GATEWAY=$(host $GATEWAY | head -1 | sed 's/.* //g')
-    ;;
-  gke) 
-    export GATEWAY=$(kubectl describe svc istio-ingressgateway -n istio-system | grep "LoadBalancer Ingress:" | sed 's~LoadBalancer Ingress:[ \t]*~~')
-    ;;
-esac
-
-echo $GATEWAY 
 
 cat config/jenkins/k8s-jenkins-deployment.yml | \
   sed 's~GATEWAY_PLACEHOLDER~'"$GATEWAY"'~' | \
