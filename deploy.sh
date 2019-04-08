@@ -72,6 +72,8 @@ curl -X POST http://$JENKINS_URL/credentials/store/system/domain/_/createCredent
   }
 }'
 
+echo "Access your Jenkins through: http://$JENKINS_URL"
+
 echo "--------------------------"
 echo "End setup credentials in Jenkins "
 echo "--------------------------"
