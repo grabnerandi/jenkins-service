@@ -13,11 +13,12 @@ rm -f config/jenkins/gen/k8s-jenkins-deployment.yml
 
 case $DEPLOYMENT in 
   eks) 
-    # for AWS we query the IP of the first EKS Node
-    GATEWAY=$(kubectl describe nodes | grep "ExternalIP: " | head -1 | sed 's~ExternalIP:[ \t]*~~' | sed 's/^ *//;s/ *$//')
+    # for AWS we query the IP of the load balancer 
+    GATEWAY=$(kubectl describe svc istio-ingressgateway -n istio-system | grep "LoadBalancer Ingress:" | sed 's~LoadBalancer Ingress:[ \t]*~~')
+    export GATEWAY=$(host $GATEWAY | head -1 | sed 's/.* //g')
     ;;
   gke) 
-    GATEWAY=$(kubectl describe svc istio-ingressgateway -n istio-system | grep "LoadBalancer Ingress:" | sed 's~LoadBalancer Ingress:[ \t]*~~')
+    export GATEWAY=$(kubectl describe svc istio-ingressgateway -n istio-system | grep "LoadBalancer Ingress:" | sed 's~LoadBalancer Ingress:[ \t]*~~')
     ;;
 esac
 
