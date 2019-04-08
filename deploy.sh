@@ -1,5 +1,5 @@
 #!/bin/sh
-REGISTRY_URI=$1
+DEPLOYMENT=$1
 JENKINS_USER=$2
 JENKINS_PASSWORD=$3
 GITHUB_USER_EMAIL=$4
@@ -11,13 +11,22 @@ DT_TENANT_URL=$8
 # Deploy Jenkins - see keptn/install/setupInfrastructure.sh:
 rm -f config/jenkins/gen/k8s-jenkins-deployment.yml
 
-export GATEWAY=$(kubectl describe svc istio-ingressgateway -n istio-system | grep "LoadBalancer Ingress:" | sed 's~LoadBalancer Ingress:[ \t]*~~')
+case $DEPLOYMENT in 
+  eks) 
+    # for AWS we query the IP of the first EKS Node
+    GATEWAY=$(kubectl describe nodes | grep "ExternalIP: " | head -1 | sed 's~ExternalIP:[ \t]*~~' | sed 's/^ *//;s/ *$//')
+    ;;
+  gke) 
+    GATEWAY=$(kubectl describe svc istio-ingressgateway -n istio-system | grep "LoadBalancer Ingress:" | sed 's~LoadBalancer Ingress:[ \t]*~~')
+    ;;
+esac
+
+echo $GATEWAY 
 
 cat config/jenkins/k8s-jenkins-deployment.yml | \
   sed 's~GATEWAY_PLACEHOLDER~'"$GATEWAY"'~' | \
   sed 's~GITHUB_USER_EMAIL_PLACEHOLDER~'"$GITHUB_USER_EMAIL"'~' | \
   sed 's~GITHUB_ORGANIZATION_PLACEHOLDER~'"$GITHUB_ORGANIZATION"'~' | \
-  sed 's~DOCKER_REGISTRY_IP_PLACEHOLDER~'"$REGISTRY_URL"'~' | \
   sed 's~DT_TENANT_URL_PLACEHOLDER~'"$DT_TENANT_URL"'~' | \
   sed 's~DT_API_TOKEN_PLACEHOLDER~'"$DT_API_TOKEN"'~' >> config/jenkins/gen/k8s-jenkins-deployment.yml
 
