@@ -47,7 +47,7 @@ pipeline {
         
             String dtTenant = "${DT_TENANT_URL}"
             if (dtTenant != null && (dtTenant.endsWith("dynatrace.com") || dtTenant.endsWith("dynatrace.com/"))) {
-              def status = pushDynatraceDeploymentEvent (
+              def status = pushDynatraceConfigurationEvent (
                 tagRule : tagMatchRules,
                 description : "Promote Artifact to next Stage",
                 source : "Jenkins Evaluation Done Pipeline",
@@ -124,7 +124,7 @@ pipeline {
           
               String dtTenant = "${DT_TENANT_URL}"
               if (dtTenant != null && (dtTenant.endsWith("dynatrace.com") || dtTenant.endsWith("dynatrace.com/"))) {
-                def status = pushDynatraceDeploymentEvent (
+                def status = pushDynatraceConfigurationEvent (
                   tagRule : tagMatchRules,
                   description : "Rollback",
                   source : "Jenkins Evaluation Done Pipeline",
