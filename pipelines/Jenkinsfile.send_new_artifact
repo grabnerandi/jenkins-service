@@ -1,0 +1,37 @@
+@Library('dynatrace@master') _
+
+pipeline {
+  agent {
+      label 'kubegit'
+  }
+  
+  parameters {
+    string(name: 'gitHubOrg', defaultValue: '', description: '')
+    string(name: 'project', defaultValue: 'sockshop', description: '')
+    string(name: 'stage', defaultValue: '', description: '')
+    string(name: 'service', defaultValue: 'carts', description: '')
+    string(name: 'image', defaultValue: 'index.docker.io/keptnexamples/carts', description: '')
+    string(name: 'tag', defaultValue: '0.6.0', description: '')
+  }
+  stages {
+    stage('Send event') {
+      steps {
+        container("curl") {
+          sendCloudEvent(
+            receiver: 'event-broker.keptn.svc.cluster.local/keptn',
+            type: 'sh.keptn.events.new-artefact',
+            source: 'Jenkins', 
+            shkeptncontext: UUID.randomUUID().toString(),
+            data: [
+              [key: 'gitHubOrg', value: "${params.gitHubOrg}"],
+              [key: 'project', value: "${params.project}"],
+              [key: 'service', value: "${params.service}"],
+              [key: 'image', value: "${params.image}"],
+              [key: 'tag', value: "${params.tag}"]
+            ]
+          )
+        }
+      }
+    }
+  }
+}
