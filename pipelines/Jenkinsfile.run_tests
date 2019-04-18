@@ -45,6 +45,40 @@ pipeline {
     }
     stage('Run health check') {
       steps {
+        echo "Waiting for the service to start..."
+        container('kubectl') {
+          script {
+            if ( env.DEPLOYMENTSTRATEGY ==~ 'blue_green_service' ) {
+              def status_blue = waitForDeployment (
+                deploymentName: "${env.SERVICE}-blue",
+                environment: "${env.STAGE}"
+              )
+              if(status_blue !=0 ){
+                currentBuild.result = 'FAILED'
+                error "Deployment - blue - did not finish before timeout."
+              }
+              
+              def status_green = waitForDeployment (
+                deploymentName: "${env.SERVICE}-green",
+                environment: "${env.STAGE}"
+              )
+              if(status_green !=0 ){
+                currentBuild.result = 'FAILED'
+                error "Deployment - green - did not finish before timeout."
+              }
+            } else {
+              def status = waitForDeployment (
+                deploymentName: "${env.SERVICE}",
+                environment: "${env.STAGE}"
+              )
+              if(status !=0 ){
+                currentBuild.result = 'FAILED'
+                error "Deployment did not finish before timeout."
+              }
+            }
+          }
+        }
+
         container('jmeter') {
           sh "rm -rf HealthCheck_${env.SERVICE}"
           sh "rm -f HealthCheck_${env.SERVICE}_result.tlf"
@@ -133,9 +167,9 @@ pipeline {
                 vuCount: 10,
                 loopCount: 500,
                 LTN: "PerfCheck_${BUILD_NUMBER}",
-                funcValidation: true,
+                funcValidation: false,
                 avgRtValidation: 0
-              )
+              )     
               if (status != 0) {
                 currentBuild.result = 'FAILED'
                 error "Performance check failed."
