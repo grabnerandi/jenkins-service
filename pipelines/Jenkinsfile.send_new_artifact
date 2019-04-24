@@ -7,10 +7,10 @@ pipeline {
   
   parameters {
     string(name: 'gitHubOrg', defaultValue: '', description: '')
-    string(name: 'project', defaultValue: 'samplenodeservice', description: '')
+    string(name: 'project', defaultValue: 'simplenodeservice', description: '')
     string(name: 'stage', defaultValue: '', description: '')
-    string(name: 'service', defaultValue: 'samplenodeservice', description: '')
-    string(name: 'image', defaultValue: 'index.docker.io/grabnerandi/samplenodeservice', description: '')
+    string(name: 'service', defaultValue: 'simplenodeservice', description: '')
+    string(name: 'image', defaultValue: 'index.docker.io/grabnerandi/simplenodeservice', description: '')
     string(name: 'tag', defaultValue: '1.0.0', description: '')
   }
   stages {
