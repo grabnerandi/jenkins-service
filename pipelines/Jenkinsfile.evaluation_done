@@ -126,7 +126,7 @@ pipeline {
               if (dtTenant != null && (dtTenant.endsWith("dynatrace.com") || dtTenant.endsWith("dynatrace.com/"))) {
               def status = pushDynatraceInfoEvent (
                   tagRule : tagMatchRules,
-                  title : "Rollback Artifact in ${env.STAGE}",
+                  title : "Rollback Artifact (Switch Blue/Green) in ${env.STAGE}",
                   source : "Jenkins Evaluation Done Pipeline",
                   description : "keptn evaluation status: ${env.EVALUATIONPASSED}", 
                   customProperties : [
@@ -164,6 +164,37 @@ pipeline {
                   [key: 'tag', value: "${env.TAG}"]
                 ]
               )
+            }
+          } else {
+            container("curl") {
+              tagMatchRules[0].tags[0].value = "${env.PROJECT}"
+              tagMatchRules[0].tags[1].value = "${env.SERVICE}"
+              tagMatchRules[0].tags[2].value = "${env.STAGE}"
+          
+              String dtTenant = "${DT_TENANT_URL}"
+              if (dtTenant != null && (dtTenant.endsWith("dynatrace.com") || dtTenant.endsWith("dynatrace.com/"))) {
+              def status = pushDynatraceInfoEvent (
+                  tagRule : tagMatchRules,
+                  title : "NOT PROMOTING Artifact from ${env.STAGE} due to failed evaluation",
+                  source : "Jenkins Evaluation Done Pipeline",
+                  description : "keptn evaluation status: ${env.EVALUATIONPASSED}", 
+                  customProperties : [
+                    [key: 'Jenkins Build Number', value: "${env.BUILD_ID}"],
+                    [key: 'githuborg', value: "${env.GITHUBORG}"],
+                    [key: 'project', value: "${env.PROJECT}"],
+                    [key: 'teststategy', value: ""],
+                    [key: 'deploymentstrategy', value: "${env.DEPLOYMENTSTRATEGY}"],
+                    [key: 'stage', value: "${env.STAGE}"],
+                    [key: 'service', value: "${env.SERVICE}"],
+                    [key: 'image', value: "${env.IMAGE}"],
+                    [key: 'tag', value: "${env.TAG}"],
+                    [key: 'keptncontext', value: "${env.KEPTNCONTEXT}"],
+                    [key: 'evaluationpassed', value: "${env.EVALUATIONPASSED}"]
+                  ]
+                )
+              } else {
+                println "No DT creds available"
+              }
             }
           }
         }
