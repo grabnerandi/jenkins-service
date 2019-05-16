@@ -98,7 +98,8 @@ pipeline {
                   [key: 'service', value: "${env.SERVICE}"],
                   [key: 'image', value: "${env.IMAGE}"],
                   [key: 'tag', value: "${env.TAG}"],
-                  [key: 'keptncontext', value: "${env.KEPTNCONTEXT}"]            
+                  [key: 'keptncontext', value: "${env.KEPTNCONTEXT}"],
+                  [key: 'bridge', value: "${env.KEPTN_BRIDGE_URL}/#/view-context/${env.KEPTNCONTEXT}"]
                 ]
               )
             } else {
