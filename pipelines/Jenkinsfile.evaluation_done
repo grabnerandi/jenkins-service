@@ -63,6 +63,7 @@ pipeline {
                   [key: 'image', value: "${env.IMAGE}"],
                   [key: 'tag', value: "${env.TAG}"],
                   [key: 'keptncontext', value: "${env.KEPTNCONTEXT}"],
+                  [key: 'bridge', value: "${env.KEPTN_BRIDGE_URL}/#/view-context/${env.KEPTNCONTEXT}"],
                   [key: 'evaluationpassed', value: "${env.EVALUATIONPASSED}"]
                 ]
               )
@@ -140,6 +141,7 @@ pipeline {
                     [key: 'image', value: "${env.IMAGE}"],
                     [key: 'tag', value: "${env.TAG}"],
                     [key: 'keptncontext', value: "${env.KEPTNCONTEXT}"],
+                    [key: 'bridge', value: "${env.KEPTN_BRIDGE_URL}/#/view-context/${env.KEPTNCONTEXT}"],                    
                     [key: 'evaluationpassed', value: "${env.EVALUATIONPASSED}"]
                   ]
                 )
@@ -189,6 +191,7 @@ pipeline {
                     [key: 'image', value: "${env.IMAGE}"],
                     [key: 'tag', value: "${env.TAG}"],
                     [key: 'keptncontext', value: "${env.KEPTNCONTEXT}"],
+                    [key: 'bridge', value: "${env.KEPTN_BRIDGE_URL}/#/view-context/${env.KEPTNCONTEXT}"],                    
                     [key: 'evaluationpassed', value: "${env.EVALUATIONPASSED}"]
                   ]
                 )
