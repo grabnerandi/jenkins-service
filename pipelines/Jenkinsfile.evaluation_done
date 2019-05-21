@@ -49,7 +49,7 @@ pipeline {
             if (dtTenant != null && (dtTenant.endsWith("dynatrace.com") || dtTenant.endsWith("dynatrace.com/"))) {
               def status = pushDynatraceInfoEvent (
                 tagRule : tagMatchRules,
-                title : "Promote Artifact from ${env.STAGE} to next stage",
+                title : "Promote Artifact ${env.TAG} from ${env.STAGE} to next stage",
                 source : "Jenkins Evaluation Done Pipeline",
                 description : "keptn evaluation status: ${env.EVALUATIONPASSED}", 
                 customProperties : [
@@ -177,7 +177,7 @@ pipeline {
               if (dtTenant != null && (dtTenant.endsWith("dynatrace.com") || dtTenant.endsWith("dynatrace.com/"))) {
               def status = pushDynatraceInfoEvent (
                   tagRule : tagMatchRules,
-                  title : "NOT PROMOTING Artifact from ${env.STAGE} due to failed evaluation",
+                  title : "NOT PROMOTING Artifact ${env.TAG} from ${env.STAGE} due to failed evaluation",
                   source : "Jenkins Evaluation Done Pipeline",
                   description : "keptn evaluation status: ${env.EVALUATIONPASSED}", 
                   customProperties : [
