@@ -88,6 +88,7 @@ pipeline {
                 deploymentVersion : "${env.TAG}",
                 deploymentName : "Deploy ${env.SERVICE} (${env.TAG}) with strategy ${env.DEPLOYMENTSTRATEGY}",
                 deploymentProject : "${env.PROJECT}", 
+                remediationAction: "In case of error - Deploy previous version!",
                 customProperties : [
                   [key: 'Jenkins Build Number', value: "${env.BUILD_ID}"],
                   [key: 'githuborg', value: "${env.GITHUBORG}"],
